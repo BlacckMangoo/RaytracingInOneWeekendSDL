@@ -1,40 +1,31 @@
 ﻿
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 
-project(Raytracing)
+project(Raytracing LANGUAGES CXX)
 
-# SDL3 and SDL3_image subdirectories
-add_subdirectory(${CMAKE_SOURCE_DIR}/SDL)
+find_package(SDL3 REQUIRED CONFIG)
 
-
-# Add source files
-add_executable(raytracing "renderer.cpp" "HeaderFiles/vec3.h" "HeaderFiles/Ray.h" "HeaderFiles/hittable.h" "HeaderFiles/sphere.h" "HeaderFiles/hittableList.h" "HeaderFiles/utility.h" "HeaderFiles/camera.h" "HeaderFiles/color.h"  "HeaderFiles/interval.h")
-
-# Add includes
-target_include_directories(raytracing PRIVATE
-
-    ${CMAKE_SOURCE_DIR}/SDL/include
-    ${CMAKE_SOURCE_DIR}/HeaderFiles/
-
-
+add_executable(raytracing
+    renderer.cpp
+    HeaderFiles/vec3.h
+    HeaderFiles/Ray.h
+    HeaderFiles/hittable.h
+    HeaderFiles/sphere.h
+    HeaderFiles/hittableList.h
+    HeaderFiles/utility.h
+    HeaderFiles/camera.h
+    HeaderFiles/color.h
+    HeaderFiles/interval.h
 )
 
-# Link SDL3 and SDL_image
-target_link_libraries(raytracing SDL3-shared)
+target_include_directories(raytracing PRIVATE ${CMAKE_SOURCE_DIR}/HeaderFiles)
+target_link_libraries(raytracing PRIVATE SDL3::SDL3)
+set_property(TARGET raytracing PROPERTY CXX_STANDARD 20)
 
-# Copy SDL DLL on Windows
 if(WIN32)
     add_custom_command(TARGET raytracing POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:SDL3-shared>
-        $<TARGET_FILE_DIR:raytracing>
-
-
-
+            $<TARGET_FILE:SDL3::SDL3>
+            $<TARGET_FILE_DIR:raytracing>
     )
-endif()
-
-# C++20
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET raytracing PROPERTY CXX_STANDARD 20)
 endif()

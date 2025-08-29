@@ -14,7 +14,7 @@ constexpr int samplesPerPixel = 20;
 
 
 vec3 SampleSquare()  {
-	return  vec3(randomDouble()-0.5, randomDouble() - 0.5, 0.0f);
+	return  vec3(randomDouble()-0.5, randomDouble() - 0.5, 0.0f); // between 
 }
 
 Ray getRay(int i, int j, Camera& camera) {
@@ -69,32 +69,16 @@ void renderScene(Camera& camera, HittableList& world, std::vector<uint32_t>& pix
 int main() {
     Camera camera(2.0f, 1.0f, vec3(0.0f, 0.0f, 0.7f));
     HittableList world;
-   // world.add(make_shared<Sphere>(vec3(0.0f, 0.0f, -1.0f), 0.5f));
 	world.add(make_shared<Sphere>(vec3(0.0f, 0.0f, -1.0f), 0.5f));
     world.add(make_shared<Sphere>(vec3(0.0f, -100.5f, -1.0f), 100.0f)); // Ground sphere
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
     SDL_Window* window = SDL_CreateWindow("SDL Raytracer", WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
-    if (!window) {
-        SDL_Log("Could not create window: %s", SDL_GetError());
-        return -1;
-    }
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
-    if (!renderer) {
-        SDL_Log("Could not create renderer: %s", SDL_GetError());
-        SDL_DestroyWindow(window);
-        return -1;
-    }
-
     SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
-        SDL_TEXTUREACCESS_STREAMING, WIDTH, HEIGHT);
-    if (!texture) {
-        SDL_Log("Could not create texture: %s", SDL_GetError());
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        return -1;
-    }
+     SDL_TEXTUREACCESS_STREAMING, WIDTH, HEIGHT);
+
 
     std::vector<uint32_t> pixels(WIDTH * HEIGHT);
 
